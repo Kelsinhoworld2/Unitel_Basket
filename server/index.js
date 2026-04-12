@@ -1,19 +1,23 @@
-require('dotenv').config();
 const Game = require("./models/Game");
 const path = require('path');
 const express = require('express');
 const cors = require("cors");
-const next = require('next');
 const http = require('http');
 const { Server } = require('socket.io');
 const connectDB = require('./db');
 
-const PORT = process.env.PORT || 5500;
 const dev = process.env.NODE_ENV !== 'production';
+
+if (dev) {
+  require('dotenv').config();
+}
+
+const PORT = process.env.PORT || 10000;
 
 // Initialize Next.js only in development
 let app, handle;
 if (dev) {
+  const next = require('next');
   app = next({ dev });
   handle = app.getRequestHandler();
 }
@@ -52,8 +56,8 @@ const startServer = async (expressApp, server) => {
 
   setInterval(() => simulateLiveScores(io), 10000);
 
-  server.listen(PORT, () => {
-    console.log(`Servidor rodando em porta ${PORT}`);
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor rodando em 0.0.0.0:${PORT}`);
   });
 };
 
