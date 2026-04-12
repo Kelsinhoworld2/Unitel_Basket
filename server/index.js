@@ -1,3 +1,6 @@
+console.log('Iniciando servidor Node.js...');
+console.log('NODE_ENV =', process.env.NODE_ENV);
+
 const Game = require("./models/Game");
 const path = require('path');
 const express = require('express');
