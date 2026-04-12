@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 import LiveMatchCard from '../components/LiveMatchCard';
 import GameCard from '../components/GameCard';
 import PlayerCard from '../components/PlayerCard';
-import LeagueLeaders from '../components/dashboard/LeagueLeaders';
+import LeagueLeaders from '../components/Dashboard/LeagueLeaders';
 
 
 

@@ -2,6 +2,7 @@ console.log('Iniciando servidor Node.js...');
 console.log('NODE_ENV =', process.env.NODE_ENV);
 
 const Game = require("./models/Game");
+const mongoose = require('mongoose');
 const path = require('path');
 const express = require('express');
 const cors = require("cors");
@@ -46,6 +47,27 @@ const simulateLiveScores = async (io) => {
 
 const createApiRoutes = (server) => {
   // Routes moved to separate files
+};
+
+const addHealthRoute = (app) => {
+  app.get('/health', (req, res) => {
+    const dbState = mongoose.connection.readyState;
+    const dbMapping = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+
+    res.json({
+      status: 'ok',
+      env: process.env.NODE_ENV || 'development',
+      port: PORT,
+      uptime: process.uptime(),
+      database: dbMapping[dbState] || 'unknown',
+      time: new Date().toISOString()
+    });
+  });
 };
 
 const startServer = async (expressApp, server) => {
