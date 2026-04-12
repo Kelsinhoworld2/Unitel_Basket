@@ -7,11 +7,22 @@ export default function Standings() {
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    const fetch = async () => {
-      const res = await axios.get('/api/standings');
-      setTeams(res.data);
+    const fetchStandings = async () => {
+      try {
+        // Pega a URL do Render configurada na Vercel
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+        
+        // Faz a chamada para o backend correto
+        const res = await axios.get(`${apiUrl}/api/standings`);
+        
+        // Atualiza o estado com os dados recebidos
+        setTeams(res.data);
+      } catch (error) {
+        console.error("Erro ao carregar classificações:", error);
+      }
     };
-    fetch();
+
+    fetchStandings();
   }, []);
 
   return (
