@@ -2,6 +2,7 @@ require('dotenv').config();
 const Game = require("./models/Game");
 const path = require('path');
 const express = require('express');
+const cors = require("cors");
 const next = require('next');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -39,6 +40,7 @@ app.prepare().then(async () => {
   await connectDB();
 const expressApp = express();
 
+  expressApp.use(cors({ origin: "*" }));
   expressApp.use(express.json());
   expressApp.use(express.static(path.join(__dirname, '..', 'public')));
 
