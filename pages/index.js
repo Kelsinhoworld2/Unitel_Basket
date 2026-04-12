@@ -1,10 +1,15 @@
+
 import { useEffect, useMemo, useState } from 'react';
 import io from 'socket.io-client';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import Layout from '../components/Layout';
 import LiveMatchCard from '../components/LiveMatchCard';
 import GameCard from '../components/GameCard';
 import PlayerCard from '../components/PlayerCard';
+import LeagueLeaders from '../components/dashboard/LeagueLeaders';
+
+
 
 let socket;
 
@@ -16,22 +21,36 @@ export default function Home() {
 
   const highlightGame = useMemo(() => liveGames[0] || upcomingGames[0] || recentGames[0] || null, [liveGames, upcomingGames, recentGames]);
 
-  useEffect(() => {
-    const load = async () => {
-      const [liveRes, allRes, playersRes] = await Promise.all([
-        axios.get('/api/live-games'),
-        axios.get('/api/games'),
-        axios.get('/api/highlights'),
-      ]);
-      const games = allRes.data;
-      setLiveGames(liveRes.data);
-      setUpcomingGames(games.filter((game) => game.status === 'upcoming'));
-      setRecentGames(games.filter((game) => game.status === 'finished').slice(-3).reverse());
-      setTopPlayers(playersRes.data);
-    };
+  const cardMotion = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.45, ease: 'easeOut' }
+  };
 
-    load();
-  }, []);
+useEffect(() => {
+ const load = async () => {
+  try {
+    const [liveRes, allRes, playersRes] = await Promise.all([
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/live-games`),
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/games`),
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/highlights`)
+    ]);
+
+    const games = allRes.data;
+
+    setLiveGames(liveRes.data);
+    setUpcomingGames(games.filter((game) => game.status === 'upcoming'));
+    setRecentGames(games.filter((game) => game.status === 'finished').slice(-3).reverse());
+    setTopPlayers(playersRes.data);
+
+  } catch (error) {
+    console.error("Erro ao carregar dados:", error);
+  }
+};
+
+
+  load();
+}, []);
 
   useEffect(() => {
     socket = io();
@@ -46,73 +65,137 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="mb-8 flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-        <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-accent">Unitel Basket</p>
-          <h1 className="mt-3 text-4xl font-semibold">Painel de estatísticas do campeonato</h1>
-          <p className="mt-4 max-w-2xl text-sm text-soft">
-            Acompanhe jogos ao vivo, próximos confrontos, resultados e o ranking dos principais jogadores do campeonato angolano.
+      <div className="bg-[#05070a] text-white">
+        <div className="mb-10 space-y-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.45em] text-white/50">Painel oficial</p>
+            <h1 className="mt-2 text-4xl sm:text-5xl font-black uppercase italic tracking-tighter bg-gradient-to-r from-lime-400 via-yellow-300 to-orange-400 bg-clip-text text-transparent">
+              Unitel Basket
+            </h1>
+          </div>
+          <p className="max-w-3xl text-sm leading-7 text-white/70">
+            Experiência broadcast de basquetebol com placar ao vivo, destaques do dia e ranking premium de jogadores.
           </p>
         </div>
-        <div className="rounded-3xl border border-border bg-panel px-6 py-5 text-right">
-          <p className="text-sm uppercase text-soft">Jogadores em destaque</p>
-          <p className="mt-2 text-3xl font-semibold text-white">{topPlayers[0]?.name || 'Carregando...'}</p>
-          <p className="text-sm text-soft">Pontuação média {topPlayers[0]?.ppg || '--'} PPG</p>
-        </div>
-      </div>
 
-      {highlightGame ? <LiveMatchCard game={highlightGame} /> : null}
-
-      <div className="mt-8 grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <section className="space-y-5">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-semibold">Próximos jogos</h2>
-              <p className="text-sm text-soft">Veja os confrontos agendados e acompanhe o calendário.</p>
-            </div>
-          </div>
-          <div className="grid gap-4">
-            {upcomingGames.slice(0, 3).map((game) => (
-              <GameCard key={game._id} game={game} />
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-5">
-          <div>
-            <h2 className="text-xl font-semibold">Melhores jogadores</h2>
-            <p className="text-sm text-soft">Ranking dos atletas mais impactantes do campeonato.</p>
-          </div>
-          <div className="grid gap-4">
-            {topPlayers.slice(0, 4).map((player) => (
-              <PlayerCard key={player._id} player={player} />
-            ))}
-          </div>
-        </section>
-      </div>
-
-      <div className="mt-8 grid gap-6 xl:grid-cols-2">
-        <section className="rounded-3xl border border-border bg-panel p-6">
-          <h2 className="text-xl font-semibold">Resultados recentes</h2>
-          <div className="mt-5 space-y-4">
-            {recentGames.map((game) => (
-              <GameCard key={game._id} game={game} />
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-3xl border border-border bg-panel p-6">
-          <h2 className="text-xl font-semibold">Feed ao vivo</h2>
-          <p className="mt-2 text-sm text-soft">As pontuações serão atualizadas automaticamente.</p>
-          <div className="mt-5 space-y-4">
-            {liveGames.length > 0 ? (
-              liveGames.map((game) => <GameCard key={game._id} game={game} />)
-            ) : (
-              <p className="text-sm text-soft">Nenhum jogo ao vivo no momento.</p>
+        <div className="mb-8 overflow-x-auto rounded-sm border border-white/10 bg-[#111] p-4 shadow-2xl shadow-black/30">
+          <div className="flex min-w-[780px] gap-4 text-xs font-black uppercase italic tracking-tighter text-white/80">
+            {recentGames.length > 0 ? recentGames.map((game) => (
+              <motion.div
+                key={game._id}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="rounded-sm border border-white/10 bg-[#111] px-4 py-3 hover:bg-[#FF6B00] hover:text-black transition-all"
+              >
+                <span>{game.homeTeam} {game.homeScore} - {game.awayScore} {game.awayTeam}</span>
+              </motion.div>
+            )) : (
+              <div className="rounded-sm bg-[#111] px-4 py-3 text-white/60">Aguardando resultados recentes...</div>
             )}
           </div>
-        </section>
+        </div>
+
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 xl:col-span-8 rounded-sm border border-white/10 bg-gradient-to-br from-black via-slate-950 to-[#111] p-6 shadow-2xl shadow-black/50 overflow-hidden relative">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,107,0,0.16),transparent_30%)] pointer-events-none" />
+            <div className="relative z-10 space-y-6">
+              <motion.div
+                className="inline-flex items-center rounded-full border border-[#FF6B00]/70 bg-[#FF6B00]/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.45em] text-[#FF6B00]"
+                animate={{ scale: [1, 1.02, 1], opacity: [0.9, 1, 0.9] }}
+                transition={{ duration: 2, ease: 'easeInOut', repeat: Infinity }}
+              >
+                UNITEL BASKET LIVE
+              </motion.div>
+
+              <div className="space-y-4">
+                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Hero Broadcast</h2>
+                <p className="max-w-2xl text-sm text-white/70">
+                  Destaque ao vivo com visual de transmissão e foco no melhor do campeonato Unitel Basket.
+                </p>
+              </div>
+
+              {highlightGame ? (
+                <LiveMatchCard game={highlightGame} />
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  className="rounded-3xl border border-white/10 bg-[#111] p-6 text-center text-white/70"
+                >
+                  Nenhum jogo disponível no momento.
+                </motion.div>
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-12 xl:col-span-4 rounded-sm border border-white/10 bg-[#111] p-6 shadow-2xl shadow-black/30">
+            <h2 className="text-xl font-black uppercase italic tracking-tighter text-[#FF6B00] mb-4">Leaderboard</h2>
+            <div className="space-y-4">
+              {topPlayers.slice(0, 5).map((player, index) => (
+                <motion.div
+                  key={player._id}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeOut', delay: index * 0.05 }}
+                  whileHover={{ scale: 1.02, boxShadow: '0 30px 60px rgba(255,107,0,0.22)' }}
+                  className="flex items-center gap-4 rounded-sm border border-white/10 bg-[#121212] p-4"
+                >
+                  <span className="text-[#FF6B00] font-black">{index + 1}</span>
+                  <PlayerCard player={player} />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 space-y-6">
+          <div className="rounded-sm border border-white/10 bg-[#111] p-6 shadow-xl shadow-black/30">
+            <h2 className="text-xl font-black uppercase italic tracking-tighter text-[#FF6B00] mb-4">Próximos Jogos</h2>
+            <div className="grid gap-4 md:grid-cols-3">
+              {upcomingGames.slice(0, 3).map((game, index) => (
+                <motion.div
+                  key={game._id}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, ease: 'easeOut', delay: index * 0.05 }}
+                  whileHover={{ scale: 1.02, boxShadow: '0 30px 60px rgba(255,107,0,0.18)' }}
+                  className="rounded-sm"
+                >
+                  <GameCard game={game} />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-sm border border-white/10 bg-[#161616] p-6 shadow-xl shadow-black/30">
+            <h2 className="text-xl font-black uppercase italic tracking-tighter text-[#FF6B00] mb-4">Feed ao Vivo</h2>
+            <div className="space-y-4">
+              {liveGames.length > 0 ? (
+                liveGames.map((game, index) => (
+                  <motion.div
+                    key={game._id}
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, ease: 'easeOut', delay: index * 0.04 }}
+                    whileHover={{ scale: 1.02, boxShadow: '0 30px 60px rgba(255,107,0,0.18)' }}
+                    className="rounded-sm"
+                  >
+                    <GameCard game={game} />
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-white/70">Nenhum jogo ao vivo no momento.</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <LeagueLeaders />
       </div>
     </Layout>
   );
+  
+
 }

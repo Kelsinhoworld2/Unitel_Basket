@@ -17,6 +17,7 @@ export default function PlayersPage() {
   const bestPlayers = players.sort((a, b) => b.ppg - a.ppg).slice(0, 6);
 
   return (
+    
     <Layout>
       <div className="mb-8">
         <p className="text-sm uppercase tracking-[0.3em] text-accent">Jogadores</p>

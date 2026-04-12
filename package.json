@@ -5,23 +5,29 @@
   "scripts": {
     "dev": "node server/index.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server/index.js",
-    "seed": "node server/seed.js"
+    "start": "NODE_ENV=production node server/index.js"
   },
   "dependencies": {
     "axios": "^1.6.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.1",
-    "express": "^4.18.4",
-    "mongoose": "^7.5.4",
+    "express": "^4.22.1",
+    "mongoose": "^7.8.9",
     "next": "^14.2.35",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "socket.io": "^4.7.2",
-    "socket.io-client": "^4.7.2"
+    "socket.io-client": "^4.7.2",
+    "framer-motion": "^11.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4"
-  }
+  },
+  "description": "Plataforma web de estatísticas de basquetebol para o campeonato angolano Unitel Basket.",
+  "main": "next.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
