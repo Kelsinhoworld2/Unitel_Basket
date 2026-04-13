@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const links = [
-  { href: '/', label: 'Dashboard' },
+  { href: '/', label: 'dashboard' },
   { href: '/games', label: 'Jogos' },
   { href: '/players', label: 'Jogadores' },
   { href: '/standings', label: 'Classificação' },
