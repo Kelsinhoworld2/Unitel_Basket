@@ -4,15 +4,22 @@ import Layout from '../components/Layout';
 
 export default function Home() {
   const [games, setGames] = useState([]);
-  const API = process.env.NEXT_PUBLIC_API_URL;
+  const [loading, setLoading] = useState(true);
+
+  const API =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://unitel-basket-api.onrender.com/api";
 
   useEffect(() => {
     const load = async () => {
       try {
         const res = await axios.get(`${API}/games`);
-        setGames(res.data);
+        setGames(res.data || []);
       } catch (err) {
-        console.error(err);
+        console.error("Erro ao carregar jogos:", err);
+        setGames([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -24,16 +31,24 @@ export default function Home() {
       <div style={{ padding: "20px", color: "white" }}>
         <h1>Unitel Basket</h1>
 
-        {games.length > 0 ? (
+        {loading ? (
+          <p>Carregando jogos...</p>
+        ) : games.length > 0 ? (
           games.map((game) => (
             <div key={game._id}>
               <p>
-                {game.homeTeam} vs {game.awayTeam}
+                {/* 🔥 FIX PRINCIPAL AQUI */}
+                {game.homeTeam?.name || game.homeTeam} vs{" "}
+                {game.awayTeam?.name || game.awayTeam}
               </p>
+
+              <small>
+                {game.homeScore ?? 0} - {game.awayScore ?? 0}
+              </small>
             </div>
           ))
         ) : (
-          <p>Carregando jogos...</p>
+          <p>Nenhum jogo encontrado</p>
         )}
       </div>
     </Layout>

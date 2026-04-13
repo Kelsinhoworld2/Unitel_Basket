@@ -31,8 +31,8 @@ const simulateLiveScores = async (io) => {
       homeScore: game.homeScore,
       awayScore: game.awayScore,
       status: game.status,
-      homeTeam: game.homeTeam.name,
-      awayTeam: game.awayTeam.name,
+      homeTeam: game.homeTeam?.name || "Home",
+      awayTeam: game.awayTeam?.name || "Away",
     });
   }
 };
@@ -59,7 +59,7 @@ const startServer = (expressApp) => {
 // 🔥 ROUTES
 const applyRoutes = (expressApp) => {
 
-  // 🔥 ROOT FIX (NÃO MAIS "Cannot GET /")
+  // ROOT
   expressApp.get('/', (req, res) => {
     res.json({
       status: "Unitel Basket API online 🚀",
@@ -67,18 +67,17 @@ const applyRoutes = (expressApp) => {
         players: "/api/players",
         games: "/api/games",
         standings: "/api/standings",
-        highlights: "temporarily disabled"
+        highlights: "/api/standings/highlights"
       }
     });
   });
 
+  // API ROUTES
   expressApp.use('/api/players', require('./routes/playerRoutes'));
   expressApp.use('/api/games', require('./routes/gameRoutes'));
   expressApp.use('/api/standings', require('./routes/standingsRoutes'));
 
-  // ⚠️ highlights removido temporariamente (evita crash)
-  // expressApp.use('/api/highlights', require('./routes/highlights'));
-
+  // HEALTH
   expressApp.get('/health', (req, res) => {
     const dbState = mongoose.connection.readyState;
 
@@ -107,15 +106,9 @@ expressApp.use(express.static(path.join(__dirname, '..', 'public')));
 
 applyRoutes(expressApp);
 
-if (!dev) {
-  connectDB().then(() => {
-    startServer(expressApp);
-  }).catch(err => {
-    console.error("Erro produção:", err);
+connectDB()
+  .then(() => startServer(expressApp))
+  .catch(err => {
+    console.error("Erro ao iniciar servidor:", err);
     process.exit(1);
   });
-} else {
-  connectDB().then(() => {
-    startServer(expressApp);
-  });
-}

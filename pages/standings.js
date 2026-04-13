@@ -13,6 +13,8 @@ export default function Standings() {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
         console.log("API URL:", apiUrl);
+        console.log("DATA RECEBIDA:", teams);
+
 
         const res = await axios.get(
           `${apiUrl}/api/standings`
