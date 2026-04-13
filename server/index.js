@@ -67,12 +67,12 @@ const applyRoutes = (expressApp) => {
         players: "/api/players",
         games: "/api/games",
         standings: "/api/standings",
-        highlights: "/api/highlights"
+        highlights: "temporarily disabled"
       }
     });
   });
 
-  expressApp.use('/api/players', require('./routes/playerRoutes.js'));
+  expressApp.use('/api/players', require('./routes/playerRoutes'));
   expressApp.use('/api/games', require('./routes/gameRoutes'));
   expressApp.use('/api/standings', require('./routes/standingsRoutes'));
 

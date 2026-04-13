@@ -1,24 +1,40 @@
-export default function StandingsTable({ teams }) {
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import StandingsTable from '../components/StandingsTable';
+
+export default function HomePage() {
+  const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStandings = async () => {
+      try {
+        const res = await axios.get(
+          'https://unitel-basket-api.onrender.com/api/standings'
+        );
+
+        setTeams(res.data);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStandings();
+  }, []);
+
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-panel shadow-xl shadow-black/20">
-      <div className="grid grid-cols-[48px_1fr_120px_120px_120px] gap-4 border-b border-border px-6 py-4 text-sm uppercase text-soft">
-        <span>#</span>
-        <span>Equipa</span>
-        <span>Vitórias</span>
-        <span>Derrotas</span>
-        <span>Pontos</span>
-      </div>
-      <div>
-        {teams.map((team, index) => (
-          <div key={team._id} className="grid grid-cols-[48px_1fr_120px_120px_120px] gap-4 px-6 py-4 hover:bg-white/5">
-            <span className="text-accent">{index + 1}</span>
-            <span>{team.name}</span>
-            <span>{team.wins}</span>
-            <span>{team.losses}</span>
-            <span>{team.points}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <main className="p-6 text-white">
+      <h1 className="text-2xl font-bold mb-4">
+        Classificação Unitel Basket
+      </h1>
+
+      {loading ? (
+        <p>A carregar tabela...</p>
+      ) : (
+        <StandingsTable teams={teams} />
+      )}
+    </main>
   );
 }
