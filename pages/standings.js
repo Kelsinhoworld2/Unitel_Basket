@@ -13,7 +13,8 @@ export default function Standings() {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
         
         // Faz a chamada para o backend correto
-        const res = await axios.get(`${apiUrl}/api/standings`);
+        console.log(apiUrl)
+        const res = await axios.get(`${apiUrl}/standings`);
         
         // Atualiza o estado com os dados recebidos
         setTeams(res.data);
