@@ -101,7 +101,7 @@ if (!dev) {
     expressApp.use('/api/teams', require('./routes/teamRoutes'));
     expressApp.use('/api/players', require('./routes/playerRoutes'));
     expressApp.use('/api/games', require('./routes/gameRoutes'));
-    expressApp.use('/api', require('./routes/standingsRoutes'));
+    expressApp.use('/api/standings', require('./routes/standingsRoutes'));
 
     // Health check endpoint
     expressApp.get('/health', (req, res) => {
