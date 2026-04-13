@@ -69,13 +69,16 @@ const startServer = async (expressApp) => {
   });
 };
 
-// 🔥 ROTAS CENTRALIZADAS
+// 🔥 ROTAS CENTRALIZADAS (CORRIGIDO PARA OS TEUS NOMES REAIS)
 const applyRoutes = (expressApp) => {
   expressApp.use('/api/teams', require('./routes/teamRoutes'));
-  expressApp.use('/api/players', require('./routes/players'));        // ✔️ corrigido nome
+
+  // ✅ CORRETO (teu ficheiro real)
+  expressApp.use('/api/players', require('./routes/playerRoutes.js'));
+
   expressApp.use('/api/games', require('./routes/gameRoutes'));
-  expressApp.use('/api/standings', require('./routes/standings'));    // ✔️ corrigido nome
-  expressApp.use('/api/highlights', require('./routes/highlights'));  // ✔️ importante
+  expressApp.use('/api/standings', require('./routes/standingsRoutes'));
+  expressApp.use('/api/highlights', require('./routes/highlights'));
 
   // Health check
   expressApp.get('/health', (req, res) => {
@@ -118,7 +121,7 @@ if (!dev) {
   });
 
 } else {
-  // 🔥 DESENVOLVIMENTO (Next + Express)
+  // 🔥 DESENVOLVIMENTO
   app.prepare().then(async () => {
     await connectDB();
 
