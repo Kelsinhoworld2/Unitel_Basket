@@ -10,19 +10,21 @@ export default function Standings() {
   useEffect(() => {
     const fetchStandings = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL ||
+          "https://unitel-basket-api.onrender.com/api";
 
         console.log("API URL:", apiUrl);
-        console.log("DATA RECEBIDA:", teams);
 
+        // ✅ CHAMADA CORRETA (SEM DUPLICAÇÃO)
+        const res = await axios.get(`${apiUrl}/standings`);
 
-        const res = await axios.get(
-          `${apiUrl}/api/standings`
-        );
+        console.log("DATA RECEBIDA:", res.data);
 
-        setTeams(res.data);
+        setTeams(res.data || []);
       } catch (error) {
         console.error("Erro ao carregar classificações:", error);
+        setTeams([]);
       } finally {
         setLoading(false);
       }
