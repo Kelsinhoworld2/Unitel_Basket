@@ -4,7 +4,7 @@ const Team = require('../models/Team');
 const Player = require('../models/Player');
 
 // GET standings
-router.get('/standings', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const standings = await Team.find().sort({ points: -1, wins: -1 });
     res.json(standings);
