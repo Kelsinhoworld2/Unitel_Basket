@@ -78,7 +78,7 @@ const applyRoutes = (expressApp) => {
 
   expressApp.use('/api/games', require('./routes/gameRoutes'));
   expressApp.use('/api/standings', require('./routes/standingsRoutes'));
-  expressApp.use('/api/highlights', require('./routes/highlights'));
+  //expressApp.use('/api/highlights', require('./routes/highlights'));
 
   // Health check
   expressApp.get('/health', (req, res) => {
