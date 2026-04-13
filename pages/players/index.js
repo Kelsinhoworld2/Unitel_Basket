@@ -1,36 +1,39 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+'use client';
+
+// Ajustamos os caminhos com ../../ para sair da pasta players e da pasta pages
 import Layout from '../../components/Layout';
-import PlayerCard from '../../components/PlayerCard';
+import LeagueLeaders from '../../components/LeagueLeaders';
+import { motion } from 'framer-motion';
 
 export default function PlayersPage() {
-  const [players, setPlayers] = useState([]);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await axios.get('/api/players');
-      setPlayers(res.data);
-    };
-    fetch();
-  }, []);
-
-  const bestPlayers = players.sort((a, b) => b.ppg - a.ppg).slice(0, 6);
-
   return (
-    
     <Layout>
-      <div className="mb-8">
-        <p className="text-sm uppercase tracking-[0.3em] text-accent">Jogadores</p>
-        <h1 className="mt-3 text-3xl font-semibold">Perfil dos atletas</h1>
-        <p className="mt-4 max-w-2xl text-sm text-soft">
-          Veja o ranking de pontuação, assistências e ressaltos dos principais jogadores do Unitel Basket.
-        </p>
-      </div>
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        
+        {/* Cabeçalho da Página */}
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-12 border-l-4 border-accent pl-6"
+        >
+          <span className="text-accent text-xs uppercase tracking-[0.3em] font-bold">Estatísticas Individuais</span>
+          <h1 className="text-4xl font-black text-white italic uppercase mt-2">
+            Elite <span className="text-accent">da Liga</span>
+          </h1>
+          <p className="text-soft text-sm mt-2 max-w-xl">
+            Confira os jogadores que estão a dominar as tabelas em Angola nesta temporada.
+          </p>
+        </motion.div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        {bestPlayers.map((player) => (
-          <PlayerCard key={player._id} player={player} />
-        ))}
+        {/* Componente com Jauro Sonça, Childe Dundão e os outros líderes */}
+        <LeagueLeaders />
+
+        {/* Rodapé informativo */}
+        <div className="mt-20 p-8 rounded-3xl bg-white/5 border border-white/10 text-center">
+          <p className="text-soft text-xs uppercase tracking-widest">
+            Os dados são atualizados após o término de cada jornada oficial.
+          </p>
+        </div>
       </div>
     </Layout>
   );
