@@ -1,4 +1,4 @@
-'use client';
+
 
 export default function StandingsTable({ teams = [] }) {
   // Garante que 'teams' é sempre uma lista para não crashar o .map
