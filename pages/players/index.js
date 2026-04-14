@@ -38,6 +38,12 @@ export default function PlayersPage() {
           </p>
         </div>
       </div>
+      <div className="mt-10">
+   <p className="text-red-500 font-bold">Teste: O cabeçalho carregou!</p>
+   <LeagueLeaders />
+   <p className="text-green-500 font-bold">Teste: O componente deveria estar acima de mim!</p>
+</div>
+
     </Layout>
   );
 }
