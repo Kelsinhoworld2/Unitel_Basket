@@ -1,6 +1,12 @@
 import { motion } from 'framer-motion';
 
-export default function LeaderCard({ rank, playerName, totalStats, avgStats, category = 'points' }) {
+export default function LeaderCard({
+  rank = 0,
+  playerName = 'Jogador',
+  totalStats = 0,
+  avgStats = 0,
+  category = 'points'
+}) {
   const categoryConfig = {
     points: {
       color: 'from-orange-600 to-red-600',
@@ -35,23 +41,35 @@ export default function LeaderCard({ rank, playerName, totalStats, avgStats, cat
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           {/* Rank Badge */}
-          <div className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${config.color} font-black text-white shadow-lg`}>
+          <div
+            className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br ${config.color} font-black text-white shadow-lg`}
+          >
             {rank}
           </div>
 
           {/* Player Info */}
           <div>
-            <p className="text-sm font-black uppercase tracking-tight text-white">{playerName}</p>
-            <p className="text-xs uppercase tracking-widest text-white/60">{config.label} {avgStats}</p>
+            <p className="text-sm font-black uppercase tracking-tight text-white">
+              {playerName}
+            </p>
+
+            <p className="text-xs uppercase tracking-widest text-white/60">
+              {config.label} {avgStats}
+            </p>
           </div>
         </div>
 
         {/* Stats Value */}
         <div className="text-right">
-          <p className={`text-2xl font-black bg-gradient-to-r ${config.color} bg-clip-text text-transparent`}>
+          <p
+            className={`text-2xl font-black bg-gradient-to-r ${config.color} bg-clip-text text-transparent`}
+          >
             {totalStats}
           </p>
-          <p className="text-xs uppercase tracking-widest text-white/60">{category}</p>
+
+          <p className="text-xs uppercase tracking-widest text-white/60">
+            {category}
+          </p>
         </div>
       </div>
     </motion.div>
