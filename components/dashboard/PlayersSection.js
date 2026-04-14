@@ -13,6 +13,10 @@ const PlayerSection = () => {
           "https://unitel-basket-api.onrender.com/api";
 
         const res = await axios.get(`${apiUrl}/players`);
+        //axios.get(`${API}/players`)
+        axios.get(`${API}/games`)
+        axios.get(`${API}/standings`)
+
 
         setPlayers(res.data || []);
       } catch (error) {
