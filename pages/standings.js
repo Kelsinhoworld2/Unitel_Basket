@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import StandingsTable from '../components/StandingsTable';
-import LeagueLeaders from '../components/LeagueLeaders'; // O componente que acabaste de mandar
+import LeagueLeaders from '../components/dclsashboard/LeagueLeaders';
+ 
 
 export default function Standings() {
   const [teams, setTeams] = useState([]);
