@@ -1,7 +1,7 @@
 'use client';
 
 import Layout from '../../components/Layout';
-import LeagueLeaders from '../../components/Dashboard/LeagueLeaders';
+import LeagueLeaders from '../../components/dashboard/LeagueLeaders';
 import { motion } from 'framer-motion';
 
 export default function PlayersPage() {
