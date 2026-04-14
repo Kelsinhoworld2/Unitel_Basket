@@ -3,7 +3,7 @@
 // 1. Verificação de caminho: 
 // Se LeagueLeaders está em components/Dashboard/LeagueLeaders.js, o caminho é este:
 import Layout from '../../components/Layout';
-import LeagueLeaders from '../../components/Dashboard/LeagueLeaders';
+import LeagueLeaders from '../../components/dashboard/LeagueLeaders';
 import { motion } from 'framer-motion';
 
 export default function PlayersPage() {

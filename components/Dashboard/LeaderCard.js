@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 
+
 export default function LeaderCard({
   rank = 0,
   playerName = 'Jogador',
