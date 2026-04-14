@@ -4,9 +4,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import StandingsTable from '../components/StandingsTable';
+// CORREÇÃO AQUI: Removemos o '.js' e garantimos o caminho para a pasta 'dashboard'
 import LeagueLeaders from '../components/dashboard/LeagueLeaders';
-
- 
 
 export default function Standings() {
   const [teams, setTeams] = useState([]);
@@ -34,11 +33,10 @@ export default function Standings() {
     <Layout>
       <div className="max-w-7xl mx-auto px-6 py-10">
         
-        {/* 1. SEÇÃO DE LÍDERES (O que pediste agora) */}
-        {/* Esta seção usa os dados estáticos que mandaste (Jauro Sonça, etc.) */}
+        {/* 1. SEÇÃO DE LÍDERES */}
         <LeagueLeaders />
 
-        <div className="my-20"></div> {/* Espaçador */}
+        <div className="my-20"></div>
 
         {/* 2. SEÇÃO DA TABELA DE CLASSIFICAÇÃO */}
         <div className="space-y-6">
