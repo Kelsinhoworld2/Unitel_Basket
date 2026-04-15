@@ -13,7 +13,8 @@ export default function Standings() {
 
   const API = process.env.NEXT_PUBLIC_API_URL || "https://unitel-basket-api.onrender.com/api";
   
-    axios.get(`${API}/players`)
+    axios.get("https://unitel-basket-api.onrender.com/api/players")
+
 
   useEffect(() => {
     const fetchTeams = async () => {
